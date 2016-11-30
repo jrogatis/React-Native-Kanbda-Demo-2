@@ -13,6 +13,7 @@ import {
 
 var SearchResults = require('./SearchResults');
 
+
 var styles = StyleSheet.create({
   description: {
     marginBottom: 20,
@@ -85,12 +86,14 @@ function urlForQueryAndPage(key, value, pageNumber) {
 class SearchPage extends Component {
   constructor(props) {
     super(props);
+
     this.state = {
       searchString: 'london',
       isLoading: false,
       message: ''
     };
   }
+
 
   onSearchTextChanged(event) {
     console.log('onSearchTextChanged');

@@ -25,13 +25,12 @@ class SearchResults extends Component {
       searchDescString: '',
       priceOrder: 'low'
     };
-    console.log(this.props.listings)
+    //console.log(this.props.listings)
   }
 
   componentWillMount() { 
-       var dataSource = new ListView.DataSource(
-         { rowHasChanged: (r1, r2) => r1.lister_url !== r2.lister_url });
-         
+    var dataSource = new ListView.DataSource(
+      { rowHasChanged: (r1, r2) => r1.lister_url !== r2.lister_url });     
    this.setState({ dataSource: dataSource.cloneWithRows(this._orderByPrice(this.props.listings))});
   }
   
@@ -77,13 +76,24 @@ class SearchResults extends Component {
     return newListings
   }
 
+  _StringMatch(string) { 
+    string = string.toLowerCase().replace(/\s/g,'');
+    const content = this.state.searchDescString.toLowerCase().replace(/\s/g,'');
+
+    return (string.indexOf(content) > -1)? true:false
+
+  }
+
   _onSearchDescPressed() {
     let newListings = []
     const dataSource = new ListView.DataSource(
       {rowHasChanged: (r1, r2) => r1.lister_url !== r2.lister_url});
     this.props.listings.forEach(item => {
 
-      if (item.title.indexOf(this.state.searchDescString) > -1 || item.summary.indexOf(this.state.searchDescString) > -1 ) {
+       /*if (item.title.indexOf(this.state.searchDescString) > -1 || item.summary.indexOf(this.state.searchDescString) > -1 ) {
+        newListings.push(item);
+      }*/
+      if (this._StringMatch(item.title) ||  this._StringMatch(item.summary)) {
         newListings.push(item);
       }
     });
