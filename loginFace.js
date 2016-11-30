@@ -20,7 +20,7 @@ class loginFace extends Component {
   
     onLocationPressed() { 
        this.props.navigator.replace({
-        title: 'SEARCH',
+        title: 'Search Page',
         component: SearchPage
       });
     }
@@ -82,21 +82,3 @@ const styles = StyleSheet.create({
 });
 
 module.exports = loginFace;
-
-/*<View
-        style={styles.container}>
-        <View
-          style={styles.buttonArea}>
-           <TouchableHighlight
-              onHideUnderlay={this._onUnhighlight}
-              onPress={this._handleOnPress}
-              onShowUnderlay={this._onHighlight}
-              style={[styles.button]}
-              underlayColor="#a9d9d4">
-            <Image
-            style={[styles.image]}
-              source={require('./Resources/login-with-facebook.png')}
-              />
-          </TouchableHighlight>
-        </View>  
-      </View>*/

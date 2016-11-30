@@ -15,9 +15,7 @@ import {
 var PropertyView = require('./PropertyView');
 
 
-
 class SearchResults extends Component {
-
   constructor(props) {
     super(props);
     this.state = {
@@ -25,36 +23,13 @@ class SearchResults extends Component {
       searchDescString: '',
       priceOrder: 'low'
     };
-    //console.log(this.props.listings)
+    
   }
 
   componentWillMount() { 
-    var dataSource = new ListView.DataSource(
-      { rowHasChanged: (r1, r2) => r1.lister_url !== r2.lister_url });     
-   this.setState({ dataSource: dataSource.cloneWithRows(this._orderByPrice(this.props.listings))});
+    this._recriateDataSource();
   }
-  
-  renderRow(rowData, sectionID, rowID) {
-    var price = rowData.price_formatted.split(' ')[0];
-
-    return (
-      <TouchableHighlight onPress={() => this.rowPressed(rowData.lister_url)}
-          underlayColor='#dddddd'>
-        <View>
-          <View style={styles.rowContainer}>
-            <Image style={styles.thumb} source={{ uri: rowData.img_url }} />
-            <View  style={styles.textContainer}>
-              <Text style={styles.price}>{price}</Text>
-              <Text style={styles.title}
-                    numberOfLines={1}>{rowData.title}</Text>
-            </View>
-          </View>
-          <View style={styles.separator}/>
-        </View>
-      </TouchableHighlight>
-    );
-  }
-
+  /*aux funcrtions */
   rowPressed(listerURL) {
     var property = this.props.listings.filter(prop => prop.lister_url === listerURL)[0];
 
@@ -65,9 +40,10 @@ class SearchResults extends Component {
     });
   }
 
-  _orderByPrice(newListings) { 
+  _orderByPrice(newListings, order) { 
+    console.log('no order by price', newListings.length)
     newListings.sort((a, b) => {
-      if(this.state.priceOrder === 'low') {
+      if(order === 'low') {
         return a.price - b.price;
       } else {
         return b.price - a.price;
@@ -84,94 +60,119 @@ class SearchResults extends Component {
 
   }
 
-  _onSearchDescPressed() {
+
+  _recriateDataSource(string, origin) { 
+    console.log('price order', this.state.priceOrder, string);
     let newListings = []
     const dataSource = new ListView.DataSource(
-      {rowHasChanged: (r1, r2) => r1.lister_url !== r2.lister_url});
-    this.props.listings.forEach(item => {
-
-       /*if (item.title.indexOf(this.state.searchDescString) > -1 || item.summary.indexOf(this.state.searchDescString) > -1 ) {
-        newListings.push(item);
-      }*/
-      if (this._StringMatch(item.title) ||  this._StringMatch(item.summary)) {
-        newListings.push(item);
-      }
-    });
-
-    newListings = this._orderByPrice(newListings)
-    this.setState({ dataSource: dataSource.cloneWithRows(newListings) });
-  }
-
-  _handleOrderValueChange(order) {
-   
-    const dataSource = new ListView.DataSource(
-      {rowHasChanged: (r1, r2) => r1.lister_url !== r2.lister_url});
-    this.state.priceOrder = order;
-    console.log(this.state.dataSource._dataBlob.s1)
-    const newListings = this._orderByPrice(this.state.dataSource._dataBlob.s1)
+      { rowHasChanged: (r1, r2) => r1.lister_url !== r2.lister_url }); 
+    if (this.state.searchDescString.length > 0) {
+      newListings = this._filterListing(this.props.listings.slice(0));
+    } else {
+      newListings = this.props.listings.slice(0);
+    }
+    if (origin === 'picker') {
+       newListings = this._orderByPrice(newListings, string)
+    } else {
+        newListings = this._orderByPrice(newListings, this.state.priceOrder)
+    }
+  
     this.setState({ dataSource: dataSource.cloneWithRows(newListings)});
-   
   }
 
+  _filterListing(listings) {
+    let listingsFiltered = []
+    listings.forEach(item => {
+      if (this._StringMatch(item.title) || this._StringMatch(item.summary)) {
+        listingsFiltered.push(item);
+      }   
+    })
+    return listingsFiltered;  
+  }    
+  
+  
   render() {
+  
     return (
-     <View style={{flex: 1}}> 
+      <View
+        style={{flex: 1}}> 
       <View style={styles.container}>
         <View style={styles.flowRight}>
           <TextInput
             style={styles.searchInput}
             value={this.state.searchDescString}  
-            onChangeText={(text) => this.setState({searchDescString: text})}  
+            onChangeText={text => this.setState({searchDescString: text}, this._recriateDataSource(text))}  
             placeholder='Search desc or Names' />   
-          <TouchableHighlight style={styles.button}
-              underlayColor='#99d9f4'>
+        </View>  
+      </View>      
+      <View style={pickerStyle.pickerContainer}>
+          <View style={pickerStyle.pickerContainerTitle}>
             <Text
-              style={styles.buttonText}
-               onPress={this._onSearchDescPressed.bind(this)}>  
-            Go
-            </Text>
-          </TouchableHighlight>
-        </View>    
-        <View style={styles.pickerContainer}>
-          <Text>
+              style={pickerStyle.pickerContainerText}>
             order by Price:
-          </Text>  
-          <Picker
-            style={styles.piker}   
-            selectedValue={this.state.priceOrder}
-            onValueChange={value => this._handleOrderValueChange(value)}>
-            <Picker.Item label='highest' value='hight' />
-            <Picker.Item label='Lowest' value='low' />
-          </Picker> 
-        </View>   
-       </View>    
-      <ListView
-        style={styles.ListView}  
-        dataSource={this.state.dataSource}
-        renderRow={this.renderRow.bind(this)}>
-        </ListView>
+            </Text>
+          </View>  
+          <View
+            style={pickerStyle.pickerContainerSolo}> 
+            <Picker
+              style={pickerStyle.piker}   
+              selectedValue={this.state.priceOrder}
+              onValueChange={value => this.setState({priceOrder: value}, this._recriateDataSource(value, 'picker'))}>
+              <Picker.Item label='highest' value='hight' />
+              <Picker.Item label='Lowest' value='low' />
+            </Picker>
+          </View>    
+        </View>
+        <View
+          style={listViewStyle.ListViewContainer}  >  
+          <ListView
+            style={styles.ListView}  
+            dataSource={this.state.dataSource}
+            renderRow={this.renderRow.bind(this)}>
+          </ListView>
+        </View>  
       </View>  
      );
   }
 
+  renderRow(rowData, sectionID, rowID) {
+    var price = rowData.price_formatted.split(' ')[0];
+    return (
+      <TouchableHighlight onPress={() => this.rowPressed(rowData.lister_url)}
+          underlayColor='#dddddd'>
+        <View>
+          <View style={rowStyle.rowContainer}>
+            <Image style={rowStyle.thumb} source={{ uri: rowData.img_url }} />
+            <View  style={rowStyle.textContainer}>
+              <Text style={rowStyle.price}>{price}</Text>
+              <Text style={rowStyle.title}
+                    numberOfLines={1}>{rowData.title}</Text>
+            </View>
+          </View>
+          <View style={rowStyle.separator}/>
+        </View>
+      </TouchableHighlight>
+    );
+  }
+
 }
 
-var styles = StyleSheet.create({
-  container: {
-    padding: 0,
-    marginTop: 65,
-    alignItems: 'center',
-    height: 200
+
+var listViewStyle = StyleSheet.create({
+  ListViewContainer: {
+    flex: 4
   },
-  pickerContainer: {
-    padding: 0,
-    marginTop: 0,
-    alignItems: 'center',
+  ListView: {
+    paddingTop: 0
+  },
+  
+
+})
+
+var rowStyle = StyleSheet.create({
+  rowContainer: {
     flexDirection: 'row',
-     alignSelf: 'stretch'
-  },
-  piker: {
-    flex: 1
+    padding: 10
   },
   thumb: {
     width: 80,
@@ -194,9 +195,45 @@ var styles = StyleSheet.create({
     fontSize: 20,
     color: '#656565'
   },
-  rowContainer: {
-    flexDirection: 'row',
-    padding: 10
+})
+
+var pickerStyle = StyleSheet.create({
+
+  pickerContainer: {
+    flex: 1,
+     flexDirection: "row", 
+     backgroundColor: "#d3d3d3",
+     justifyContent: "center",
+     
+  },
+  pickerContainerTitle: {
+    flex: 1,
+    justifyContent: "center",
+  }, 
+  pickerContainerText: {
+    paddingLeft: 10,
+    fontSize: 18,
+  },
+  pickerContainerSolo: {
+    flex: 1,
+    justifyContent: "center",
+  
+
+  },
+  piker: {
+    flex: 1,
+     justifyContent: "center", 
+  },
+  
+  
+});
+
+var styles = StyleSheet.create({
+  container: {
+    padding: 0,
+    marginTop: 65,
+    alignItems: 'center',
+    height: 60
   },
   flowRight: {
     flexDirection: 'row',
@@ -233,11 +270,9 @@ var styles = StyleSheet.create({
     borderColor: '#48BBEC',
     borderRadius: 8,
     color: '#48BBEC'
-  },
-  ListView: {
-    paddingTop: 0
   }
 });
 
 
 module.exports = SearchResults;
+
