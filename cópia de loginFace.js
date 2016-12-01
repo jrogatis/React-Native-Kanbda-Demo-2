@@ -8,40 +8,8 @@ import {
   Image
 } from 'react-native';
 
+
 var SearchPage = require('./SearchPage');
-
-const FBSDK = require('react-native-fbsdk');
-const {
-  LoginButton,
-} = FBSDK;
-      
-/*class Login extends Component {
-
-  onLocationPressed () { 
-       this.props.navigator.replace({
-        title: 'Search Page',
-        component: SearchPage
-      });
-    }
-  
-  render () {
-    return (
-      <View>
-        <LoginButton
-          publishPermissions={["publish_actions"]}
-          onLoginFinished={
-      
-               this.onLocationPressed
-              }
-         />
-      </View>
-    );
-  }
-}*/
-
-
-
-
 
 class loginFace extends Component {
     constructor(props) {
@@ -65,12 +33,16 @@ class loginFace extends Component {
         style={styles.container}>
         <View
           style={styles.buttonArea}>
-           <View>
-        <LoginButton
-          publishPermissions={["publish_actions"]}
-          onLoginFinished={this.onLocationPressed.bind(this)}
-         />
-      </View>
+           <TouchableHighlight
+            style={[styles.button]}
+             onPress={this.onLocationPressed.bind(this)} 
+              underlayColor="#a9d9d4">
+            <Image
+            style={[styles.image]}
+            source={require('./Resources/login-with-facebook.png')}
+           
+              />
+          </TouchableHighlight>
         </View>  
       </View>
    
