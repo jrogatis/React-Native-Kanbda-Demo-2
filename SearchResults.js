@@ -12,8 +12,7 @@ import {
   Picker
 } from 'react-native';
 
-var PropertyView = require('./PropertyView');
-
+import  PropertyView  from './PropertyView';
 
 class SearchResults extends Component {
   constructor(props) {
@@ -29,7 +28,7 @@ class SearchResults extends Component {
   componentWillMount() { 
     this._recriateDataSource();
   }
-  /*aux funcrtions */
+
   rowPressed(listerURL) {
     var property = this.props.listings.filter(prop => prop.lister_url === listerURL)[0];
 
@@ -59,7 +58,6 @@ class SearchResults extends Component {
     return (string.indexOf(content) > -1)? true:false
 
   }
-
 
   _recriateDataSource(string, origin) { 
     console.log('price order', this.state.priceOrder, string);
@@ -97,13 +95,11 @@ class SearchResults extends Component {
       <View
         style={{flex: 1}}> 
       <View style={styles.container}>
-        <View style={styles.flowRight}>
-          <TextInput
-            style={styles.searchInput}
-            value={this.state.searchDescString}  
-            onChangeText={text => this.setState({searchDescString: text}, this._recriateDataSource(text))}  
-            placeholder='Search desc or Names' />   
-        </View>  
+        <TextInput
+          style={styles.searchInput}
+          value={this.state.searchDescString}  
+          onChangeText={text => this.setState({searchDescString: text}, this._recriateDataSource(text))}  
+          placeholder='Search Desc or Names' />   
       </View>      
       <View style={pickerStyle.pickerContainer}>
           <View style={pickerStyle.pickerContainerTitle}>
@@ -157,19 +153,16 @@ class SearchResults extends Component {
 
 }
 
-
-var listViewStyle = StyleSheet.create({
+const listViewStyle = StyleSheet.create({
   ListViewContainer: {
     flex: 4
   },
   ListView: {
     paddingTop: 0
-  },
-  
-
+  }
 })
 
-var rowStyle = StyleSheet.create({
+const rowStyle = StyleSheet.create({
   rowContainer: {
     flexDirection: 'row',
     padding: 10
@@ -197,14 +190,12 @@ var rowStyle = StyleSheet.create({
   },
 })
 
-var pickerStyle = StyleSheet.create({
-
+const pickerStyle = StyleSheet.create({
   pickerContainer: {
     flex: 1,
      flexDirection: "row", 
-     backgroundColor: "#d3d3d3",
-     justifyContent: "center",
-     
+     backgroundColor: "#f4eeee",
+     justifyContent: "center",  
   },
   pickerContainerTitle: {
     flex: 1,
@@ -217,48 +208,21 @@ var pickerStyle = StyleSheet.create({
   pickerContainerSolo: {
     flex: 1,
     justifyContent: "center",
-  
-
   },
   piker: {
     flex: 1,
      justifyContent: "center", 
-  },
-  
-  
+  }
 });
 
-var styles = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     padding: 0,
-    marginTop: 65,
+    marginTop: 75,
     alignItems: 'center',
-    height: 60
-  },
-  flowRight: {
+    height: 60,
     flexDirection: 'row',
-    alignItems: 'center',
     alignSelf: 'stretch'
-  },
-  flowRightPicker: {
-    flexDirection: 'row', 
-  },
-  buttonText: {
-    fontSize: 18,
-    color: 'white',
-    alignSelf: 'center'
-  },
-  button: {
-    height: 36,
-    flex: 1,
-    flexDirection: 'row',
-    backgroundColor: '#48BBEC',
-    borderColor: '#48BBEC',
-    borderWidth: 1,
-    borderRadius: 8,
-    marginBottom: 10,
-    alignSelf: 'stretch',
-    justifyContent: 'center'
   },
   searchInput: {
     height: 36,
@@ -272,7 +236,6 @@ var styles = StyleSheet.create({
     color: '#48BBEC'
   }
 });
-
 
 module.exports = SearchResults;
 

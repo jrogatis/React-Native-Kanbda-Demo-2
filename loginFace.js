@@ -2,10 +2,7 @@
 import React, { Component } from 'react';
 import {
   StyleSheet,
-  Text,
-  TouchableHighlight,
-  View,
-  Image
+  View
 } from 'react-native';
 
 var SearchPage = require('./SearchPage');
@@ -15,43 +12,34 @@ const {
   LoginButton,
 } = FBSDK;
       
-
-
-
-
 class loginFace extends Component {
     constructor(props) {
     super(props);
-    
+  } 
+
+  onLocationPressed() { 
+      this.props.navigator.replace({
+      title: 'Search Page',
+      component: SearchPage
+    });
   }
-  
-  
-    onLocationPressed() { 
-       this.props.navigator.replace({
-        title: 'Search Page',
-        component: SearchPage
-      });
-    }
 
   render() {
     
     return (
-   
       <View
         style={styles.container}>
         <View
           style={styles.buttonArea}>
            <View>
-        <LoginButton
-              publishPermissions={["publish_actions"]}
-           onLoginFinished={
-               this.onLocationPressed.bind(this)
-              }
-         />
-      </View>
+              <LoginButton
+                publishPermissions={["publish_actions"]}
+                onLoginFinished={
+                    this.onLocationPressed.bind(this)
+                    }/>
+          </View>
         </View>  
       </View>
-   
     );
   }
 }
@@ -79,11 +67,7 @@ const styles = StyleSheet.create({
      flex: 1,
     flexDirection: 'column',
     justifyContent: 'center',
-    alignItems: 'center',
-  },
-  image: {
-    width: 300,
-    resizeMode: 'contain' 
+    alignItems: 'center'
   }
 });
 
