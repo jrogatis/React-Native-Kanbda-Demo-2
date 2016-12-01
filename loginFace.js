@@ -15,30 +15,6 @@ const {
   LoginButton,
 } = FBSDK;
       
-/*class Login extends Component {
-
-  onLocationPressed () { 
-       this.props.navigator.replace({
-        title: 'Search Page',
-        component: SearchPage
-      });
-    }
-  
-  render () {
-    return (
-      <View>
-        <LoginButton
-          publishPermissions={["publish_actions"]}
-          onLoginFinished={
-      
-               this.onLocationPressed
-              }
-         />
-      </View>
-    );
-  }
-}*/
-
 
 
 
@@ -67,8 +43,18 @@ class loginFace extends Component {
           style={styles.buttonArea}>
            <View>
         <LoginButton
-          publishPermissions={["publish_actions"]}
-          onLoginFinished={this.onLocationPressed.bind(this)}
+              publishPermissions={["publish_actions"]}
+           onLoginFinished={
+            (error, result) => {
+              if (error) {
+                alert("Login failed with error: " + result.error);
+              } else if (result.isCancelled) {
+                alert("Login was cancelled");
+              } else {
+               this.onLocationPressed.bind(this)
+              }
+            }
+          }   
          />
       </View>
         </View>  
