@@ -14,10 +14,7 @@ const {
       
 class loginFace extends Component {
     constructor(props) {
-      super(props);
-      this.state = {
-        logedIn: false
-    }  
+    super(props);
   } 
 
   onLocationPressed() { 
@@ -38,18 +35,8 @@ class loginFace extends Component {
               <LoginButton
                 publishPermissions={["publish_actions"]}
                 onLoginFinished={
-                (error, result) => {
-                  if (error) {
-                    console.log(error);
-                    alert("Login failed with error: " + result.error);
-                  } else if (result.isCancelled) {
-                  alert("Login was cancelled");
-                  } else {
-                    alert("Login was successful with permissions: " + result.grantedPermissions) 
-                    this.setState({ logedIn: true}, this.onLocationPressed.bind(this))
-              }
-            }
-          }/>
+                    this.onLocationPressed.bind(this)
+                    }/>
           </View>
         </View>  
       </View>
