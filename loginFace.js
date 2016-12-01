@@ -45,16 +45,8 @@ class loginFace extends Component {
         <LoginButton
               publishPermissions={["publish_actions"]}
            onLoginFinished={
-            (error, result) => {
-              if (error) {
-                alert("Login failed with error: " + result.error);
-              } else if (result.isCancelled) {
-                alert("Login was cancelled");
-              } else {
                this.onLocationPressed.bind(this)
               }
-            }
-          }   
          />
       </View>
         </View>  
