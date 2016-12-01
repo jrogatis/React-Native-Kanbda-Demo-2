@@ -22,6 +22,7 @@ var styles = StyleSheet.create({
     color: '#656565'
   },
   container: {
+    flex: 1,
     padding: 30,
     marginTop: 65,
     alignItems: 'center'
@@ -38,7 +39,6 @@ var styles = StyleSheet.create({
   },
   button: {
     height: 36,
-    flex: 1,
     flexDirection: 'row',
     backgroundColor: '#48BBEC',
     borderColor: '#48BBEC',
@@ -161,11 +161,13 @@ class SearchPage extends Component {
         <Text style={styles.description}>
           Search for houses to buy!
         </Text>
+         <View style={styles.flowRight}>
         <TextInput
           style={styles.searchInput}
           value={this.state.searchString}
           onChange={this.onSearchTextChanged.bind(this)}
-          placeholder='Search via name or postcode'/>
+          placeholder='Search via name or postcode' />
+        </View>  
         <View style={styles.flowRight}>
           <TextInput
             style={styles.searchInput}
